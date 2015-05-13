@@ -3,7 +3,7 @@ require "rails_helper"
 describe "Acount features" do
   
   before(:each) do 
-    login_as create( :user ), scope: :user
+    login(create( :user ))
   end
   
   it 'creates accounts' do 
@@ -31,5 +31,11 @@ describe "Acount features" do
     end
     visit accounts_path
     expect{ first(:link, 'Delete').click }.to change(Account, :count).by(-1)
+  end
+
+  it 'displays account\'s user\'s full name' do 
+    account = create(:account)
+    visit account_path(account)
+    expect(page).to have_content(account.user.full_name)
   end
 end
