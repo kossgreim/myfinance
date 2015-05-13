@@ -1,7 +1,28 @@
-module DeviseMacros
-  def login_user
+require 'spec_helper'
+include Warden::Test::Helpers
+
+module RequestHelpers
+  def create_logged_in_user
     user = create(:user)
-    user.confirm!
+    login(user)
+    user
+  end
+
+  def login(user)
+    login_as user, scope: :user
+  end
+end
+
+module ControllerMacros
+  def login_user
+    @request.env["devise.mapping"] = Devise.mappings[:user]
+    user = FactoryGirl.create(:user)
+    user.confirm! # or set a confirmed_at inside the factory. Only necessary if you are using the "confirmable" module
     sign_in user
   end
+end
+
+RSpec.configure do |config|
+  config.include RequestHelpers
+  config.include ControllerMacros
 end
