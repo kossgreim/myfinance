@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe "Acount features" do
+describe "Acount features", type: :feature do
   
   before(:each) do 
     login(create( :user ))
