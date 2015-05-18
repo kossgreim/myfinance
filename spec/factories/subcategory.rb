@@ -1,6 +1,6 @@
 FactoryGirl.define do
-  factory :category do
+  factory :subcategory do
     name { Faker::Commerce.product_name }
-    association :user, factory: :user
+    association :category, factory: :category
   end
 end

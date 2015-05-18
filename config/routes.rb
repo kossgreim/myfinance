@@ -1,16 +1,8 @@
 Rails.application.routes.draw do
-  resources :categories
-  get 'category/index'
 
-  get 'category/create'
-
-  get 'category/new'
-
-  get 'category/show'
-
-  get 'category/edit'
-
-  get 'category/destroy'
+  resources :categories do 
+    resources :subcategories, except: [:index, :show]
+  end
 
   resources :accounts
   get 'dashboard', to: 'main#dashboard'
