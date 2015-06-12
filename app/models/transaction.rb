@@ -8,17 +8,10 @@ class Transaction < ActiveRecord::Base
 
   validates :amount, numericality: {greater_than: 0.00}, presence: true
   validates :user, :account, :category, presence: true
-
-  def perform_transaction
-    ActiveRecord::Base.transaction do 
-      self.save!
-      # check if positive, than add to balance otherwise minus
-      if self.type? 
-        self.account.update! balance: (self.account.balance + self.amount )
-      else
-        self.account.update! balance: (self.account.balance - self.amount )
-      end
-      true
-    end
+  after_save :update_account
+  private
+  def update_account
+    self.account.balance += self.amount
+    self.account.save!
   end
 end

@@ -1,0 +1,28 @@
+= form_for @transaction, html: { class: "form form-horizontal transaction" } do |f|
+  .form-group
+    = f.label :amount, class: 'control-label'
+    .controls
+      = f.text_field :amount, class: 'form-control', required: true
+    = error_span(@transaction[:amount])
+  .form-group
+    = f.label :comment, class: 'control-label'
+    .controls
+      = f.text_field :comment, class: 'form-control', required: true
+    = error_span(@transaction[:comment])
+  .form-group
+    = f.label :category_id, class: 'control-label'
+    .controls
+      = f.select :category_id, current_user.categories.all.collect {|c| [ c.name, c.id ] }, class: 'form-control', required: true
+    = error_span(@transaction[:category_id])
+  .form-group
+    = f.label :subcategory_id, class: 'control-label'
+    .controls
+      = f.select :subcategory_id, current_user.subcategories.all.collect {|s| [ s.name, s.id ] }, class: 'form-control'
+    = error_span(@transaction[:subcategory_id])
+  .form-group
+    = f.label :account_id, class: 'control-label'
+    .controls
+      = f.select :account_id, current_user.accounts.all.collect {|a| [ a.name, a.id ] },  class: 'form-control', required: true
+    = error_span(@transaction[:account_id])
+  = f.submit nil,class: 'btn btn-primary'
+  = link_to t('.cancel', :default => t("helpers.links.cancel")), transactions_path, :class => 'btn btn-default'

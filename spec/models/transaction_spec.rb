@@ -1,13 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Transaction, type: :model do
+  let(:transaction) { build(:transaction) }
+  
   describe 'validation' do
-  	let(:transaction) {build(:transaction)}
   	context 'invalid when' do 
-  		it 'has amount 0.00' do 
-  			transaction.amount = 0.00
-  			expect(transaction).to be_invalid
-  		end
   		it 'has no amount' do 
   			transaction.amount = nil
   			expect(transaction).to be_invalid
@@ -23,13 +20,24 @@ RSpec.describe Transaction, type: :model do
   		end
   	end
   end
-  describe '.perform_transaction' do
-    it 'changes balance according to transaction' do
-      transaction = build(:transaction)
-      if transaction.type?
-        expect{transaction.perform_transaction}.to change(transaction.account, :balance).by(+transaction.amount)
-      else
-        expect(transaction.perform_transaction).to change(transaction.account, :balance).by(-transaction.amount)
+  
+  describe 'interaction with data' do 
+    let(:account) { create(:account) }
+    
+    context 'when updates a transaction\'s amount' do
+      it 'changes account\'s balance' do 
+        transaction.account = account
+        transaction.save!
+        new_transaction_amount = BigDecimal.new('20.25')
+        transaction.amount = new_transaction_amount
+        expect{ transaction.save }.to change(account, :balance).by(new_transaction_amount)
+      end
+    end
+    
+    context 'when creates a new transaction' do 
+      it 'updates account\'s balance' do
+        transaction.account = account
+        expect{ transaction.save }.to change(account, :balance).by(transaction.amount)
       end
     end
   end

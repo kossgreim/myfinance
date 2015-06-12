@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :transactions
   resources :categories do 
     resources :subcategories, except: [:index, :show]
   end
