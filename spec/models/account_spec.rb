@@ -20,4 +20,17 @@ RSpec.describe Account, type: :model do
       end
     end
   end
+  describe '.perform_transaction' do
+    before(:each) do 
+      @category = create(:category)
+      @subcategory = create(:subcategory)
+    end
+    it 'update account\'s balance' do
+      expect{ account.perform_transaction(25, @category, false, @subcategory, 'test comment') }.to change(account, :balance).by(BigDecimal(-25))
+    end
+
+    it 'creates transaction log' do
+      expect( account.perform_transaction(123, @category, true, @subcategory, 'test comment') ).to change(Transaction, :count).by(1)
+    end
+  end
 end
