@@ -11,7 +11,11 @@ class Transaction < ActiveRecord::Base
   after_save :update_account
   private
   def update_account
-    self.account.balance += self.amount
+    if self.account.balance.nil?
+      self.account.balance = self.amount
+    else
+      self.account.balance += self.amount
+    end
     self.account.save!
   end
 end

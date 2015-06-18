@@ -28,9 +28,10 @@ RSpec.describe Transaction, type: :model do
       it 'changes account\'s balance' do 
         transaction.account = account
         transaction.save!
-        new_transaction_amount = BigDecimal.new('20.25')
-        transaction.amount = new_transaction_amount
-        expect{ transaction.save }.to change(account, :balance).by(new_transaction_amount)
+        new_amount = BigDecimal(Faker::Commerce.price)
+        differ = transaction.amount - new_amount
+        transaction.amount = differ
+        expect{ transaction.save }.to change(account, :balance).by(differ)
       end
     end
     
